@@ -13,7 +13,7 @@ import {IDiamondCut} from "./interfaces/IDiamondCut.sol";
 import "./libraries/AppStorage.sol";
 
 contract Diamond {
-    AppStorage internal s;
+    AppStorage s;
 
     constructor(address _contractOwner, address _diamondCutFacet) payable {
         LibDiamond.setContractOwner(_contractOwner);

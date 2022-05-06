@@ -39,9 +39,9 @@ contract LIBERC1155FACET is IERC1155 {
         setApprovalForAll(_to, true);
     }
 
-    function test() public {
-        console.log("This is called");
-    }
+    // function test() public {
+    //     console.log("This is called");
+    // }
 
     function createCollection(uint256 _quantityOfToken, uint256 _collectionMintingFees) public {
         s.collectionsCount++;
@@ -61,15 +61,15 @@ contract LIBERC1155FACET is IERC1155 {
         // libErc1155Storage.AppStorage storage s = libErc1155Storage.erc1155Storage();
         // console.log(_to, "This is _to inputted");
         s.balances[_tokenId].accountBalances[_to] += _amount;
-        console.log(s.balances[_tokenId].accountBalances[_to], "mint called");
+        // console.log(s.balances[_tokenId].accountBalances[_to], "mint called");
     }
 
     function balanceOf(address _owner, uint256 _id) public view virtual override returns (uint256 balance_) {
-        console.log(_owner, "Id of balance");
+        // console.log(_owner, "Id of balance");
         require(_owner != address(0), "ERC1155: address zero is not a valid owner");
         // libErc1155Storage.AppStorage storage s = libErc1155Storage.erc1155Storage();
         balance_ = s.balances[_id].accountBalances[_owner];
-        console.log(s.balances[_id].accountBalances[_owner]);
+        // console.log(s.balances[_id].accountBalances[_owner]);
     }
 
     function safeTransferFrom(
@@ -86,8 +86,8 @@ contract LIBERC1155FACET is IERC1155 {
         require(bal >= _value, "ERC1155Facet: _value greater than balance");
         s.balances[_id].accountBalances[_from] = bal - _value;
         s.balances[_id].accountBalances[_to] += _value;
-        console.log("This is Balance");
-        console.log(s.balances[_id].accountBalances[_to]);
+        // console.log("This is Balance");
+        // console.log(s.balances[_id].accountBalances[_to]);
     }
 
     function safeBatchTransferFrom(

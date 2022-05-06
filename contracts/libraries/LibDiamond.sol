@@ -14,6 +14,7 @@ pragma experimental ABIEncoderV2;
 /******************************************************************************/
 
 import "../interfaces/IDiamondCut.sol";
+import "hardhat/console.sol";
 
 library LibDiamond {
     bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.storage");
@@ -121,11 +122,13 @@ library LibDiamond {
         DiamondStorage storage ds = diamondStorage();
         require(_selectors.length > 0, "LibDiamondCut: No selectors in facet to cut");
         if (_action == IDiamondCut.FacetCutAction.Add) {
+            // uint256 cCount = 0;
             require(_newFacetAddress != address(0), "LibDiamondCut: Add facet can't be address(0)");
             enforceHasContractCode(_newFacetAddress, "LibDiamondCut: Add facet has no code");
             for (uint256 selectorIndex; selectorIndex < _selectors.length; selectorIndex++) {
                 bytes4 selector = _selectors[selectorIndex];
                 bytes32 oldFacet = ds.facets[selector];
+                console.logBytes32(selector);
                 require(address(bytes20(oldFacet)) == address(0), "LibDiamondCut: Can't add function that already exists");
                 // add facet for selector
                 ds.facets[selector] = bytes20(_newFacetAddress) | bytes32(_selectorCount);
@@ -138,6 +141,7 @@ library LibDiamond {
                     _selectorSlot = 0;
                 }
                 _selectorCount++;
+                // cCount++;
             }
         } else if (_action == IDiamondCut.FacetCutAction.Replace) {
             require(_newFacetAddress != address(0), "LibDiamondCut: Replace facet can't be address(0)");

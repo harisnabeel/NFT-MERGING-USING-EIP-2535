@@ -62,7 +62,7 @@ const main = async () => {
   console.log('')
   console.log('Deploying facets')
   const FacetNames = ['LIBERC1155FACET','DiamondLoupeFacet',
-    'OwnershipFacet','LIBMAINFACET']
+    'OwnershipFacet','LIBMAINFACET','LIBERC721FACET']
 
     const cut = []
   for (const FacetName of FacetNames) {
@@ -102,15 +102,24 @@ const main = async () => {
   // MINTS 
 
   const LIBMAINFACET = await ethers.getContractAt('LIBMAINFACET', diamond.address)
-  await LIBMAINFACET.initializer("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"); // Diamond address and LIBERC1155FACET address in parameters 
-  await LIBMAINFACET.connect.mint(5,4) // mints to Diamond contract due to context
+  await LIBMAINFACET.initializer("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9","0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"); // Diamond address and LIBERC1155FACET address in parameters 
+  await LIBMAINFACET.connect(accounts[0]).mint_(5,4) // mints to Diamond contract due to context
+  await LIBMAINFACET.connect(accounts[0]).mint_(1,4,{value:"1000000000000000000"}) // mints to Diamond contract due to context
+  // await LIBMAINFACET.connect(accounts[0]).mint_(1,4,{value:"1000000000000000000"})
+  // let bal =  await LIBMAINFACET.balOf(accounts[0].address,1);
+  // console.log(bal.toString(), "This is latest balance");
   // await Mainlib.balanceOf(accounts[0].address,1)
 
-// checking balance 
+// checking balance of erc1155
   const liberc1155Facet = await ethers.getContractAt('LIBERC1155FACET', diamond.address)
 
-  let balance = await liberc1155Facet.balanceOf("0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",1) // Diamond address in parameter (which is minting nfts)
-  console.log(balance.toString())  // this outputs 0 instead of 5;
+  let balance1155 = await liberc1155Facet.balanceOf(accounts[0].address,1) // Diamond address in parameter (which is minting nfts)
+  console.log(balance1155.toString(), " = Balance of ERC1155 tokens")
+// checking balance of erc721
+  const liberc721Facet = await ethers.getContractAt('LIBERC721FACET', diamond.address)
+
+  let balance = await liberc721Facet.balanceOf(accounts[0].address) // Diamond address in parameter (which is minting nfts)
+  console.log(balance.toString()," = Balance of ERC721 token")  
   // console.log(accounts[0].address)
   // console.log(a.toString());
   // await diamond.mint(accounts[0].address,3)

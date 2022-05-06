@@ -13,14 +13,19 @@ contract LIBERC721FACET is IERC721 {
     AppStorage internal s;
 
     function mint(address _to) public payable {
+        console.log("THIS IS ERC721 LAND contract");
         require(msg.value >= 1, "Send more ethers: 1 ether is required");
         require(balanceOf(_to) == 0, "You can not have more than 1 Land");
         // libErc721Storage.ERC721TOKEN storage s = libErc721Storage.erc721Storage();
         s.tokenId721++;
-        _mint(_to, s.tokenId721);
+        __mint(_to, s.tokenId721);
     }
 
-    function _mint(address to, uint256 tokenId) internal virtual {
+    function t() public {
+        console.log("T of LAND called");
+    }
+
+    function __mint(address to, uint256 tokenId) internal virtual {
         require(to != address(0), "ERC721: mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
         // libErc721Storage.ERC721TOKEN storage s = libErc721Storage.erc721Storage();
@@ -45,12 +50,12 @@ contract LIBERC721FACET is IERC721 {
         address owner = LIBERC721FACET.ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
 
-        require(msg.sender == owner || isApprovedForAll(owner, msg.sender), "ERC721: approve caller is not owner nor approved for all");
+        require(msg.sender == owner || isApprovedForAllERC721(owner, msg.sender), "ERC721: approve caller is not owner nor approved for all");
 
         _approve(to, tokenId);
     }
 
-    function isApprovedForAll(address owner, address operator) public view virtual override returns (bool) {
+    function isApprovedForAllERC721(address owner, address operator) public view virtual override returns (bool) {
         // libErc721Storage.ERC721TOKEN storage s = libErc721Storage.erc721Storage();
         return s._operatorApprovals[owner][operator];
     }
@@ -71,7 +76,7 @@ contract LIBERC721FACET is IERC721 {
         s._operatorApprovals[owner][operator] = approved;
     }
 
-    function setApprovalForAll(address operator, bool approved) public virtual override {
+    function setApprovalForAllERC721(address operator, bool approved) public virtual override {
         _setApprovalForAll(msg.sender, operator, approved);
     }
 
@@ -128,7 +133,7 @@ contract LIBERC721FACET is IERC721 {
     function _isApprovedOrOwner(address spender, uint256 tokenId) internal view virtual returns (bool) {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
         address owner = LIBERC721FACET.ownerOf(tokenId);
-        return (spender == owner || isApprovedForAll(owner, spender) || getApproved(tokenId) == spender);
+        return (spender == owner || isApprovedForAllERC721(owner, spender) || getApproved(tokenId) == spender);
     }
 
     function _safeTransfer(
